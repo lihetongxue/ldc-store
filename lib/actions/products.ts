@@ -228,6 +228,7 @@ export async function createProduct(input: CreateProductInput) {
         ...validationResult.data,
         price: validationResult.data.price.toFixed(2),
         originalPrice: validationResult.data.originalPrice?.toFixed(2),
+        coverImage: validationResult.data.coverImage || null,
       })
       .returning();
 
@@ -268,6 +269,9 @@ export async function updateProduct(id: string, input: UpdateProductInput) {
     }
     if (validationResult.data.originalPrice !== undefined) {
       updateData.originalPrice = validationResult.data.originalPrice?.toFixed(2);
+    }
+    if (validationResult.data.coverImage !== undefined) {
+      updateData.coverImage = validationResult.data.coverImage || null;
     }
 
     const [product] = await db

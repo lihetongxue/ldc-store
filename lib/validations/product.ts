@@ -13,7 +13,7 @@ export const productSchema = z.object({
   content: z.string().optional(), // Markdown 内容
   price: z.number().positive("价格必须大于0"),
   originalPrice: z.number().positive("原价必须大于0").optional().nullable(),
-  coverImage: z.string().url("无效的图片URL").optional().nullable(),
+  coverImage: z.string().url("无效的图片URL").optional().nullable().or(z.literal("")),
   images: z.array(z.string().url()).optional(),
   isActive: z.boolean().default(true),
   isFeatured: z.boolean().default(false),
