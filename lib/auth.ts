@@ -1,13 +1,9 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { db, users } from "@/lib/db";
-import { eq } from "drizzle-orm";
-import bcrypt from "bcryptjs";
 import { z } from "zod";
 
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string().min(1),
 });
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -15,7 +11,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Credentials({
       name: "credentials",
       credentials: {
-        email: { label: "邮箱", type: "email" },
         password: { label: "密码", type: "password" },
       },
       async authorize(credentials) {
@@ -24,26 +19,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        const { email, password } = parsed.data;
+        const { password } = parsed.data;
+        const adminPassword = process.env.ADMIN_PASSWORD;
 
-        const user = await db.query.users.findFirst({
-          where: eq(users.email, email),
-        });
-
-        if (!user) {
+        if (!adminPassword) {
+          console.error("ADMIN_PASSWORD 环境变量未设置");
           return null;
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) {
+        // 直接比较密码（明文）
+        if (password !== adminPassword) {
           return null;
         }
 
+        // 返回固定的管理员用户
         return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
+          id: "admin",
+          email: "admin@localhost",
+          name: "管理员",
+          role: "admin",
         };
       },
     }),

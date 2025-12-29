@@ -21,8 +21,7 @@ import { Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";
 
 const loginSchema = z.object({
-  email: z.string().email("请输入有效的邮箱"),
-  password: z.string().min(6, "密码至少6位"),
+  password: z.string().min(1, "请输入密码"),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -36,7 +35,6 @@ function LoginForm() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
       password: "",
     },
   });
@@ -46,14 +44,13 @@ function LoginForm() {
 
     try {
       const result = await signIn("credentials", {
-        email: values.email,
         password: values.password,
         redirect: false,
       });
 
       if (result?.error) {
         toast.error("登录失败", {
-          description: "邮箱或密码错误",
+          description: "密码错误",
         });
       } else {
         toast.success("登录成功");
@@ -82,34 +79,16 @@ function LoginForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>邮箱</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="admin@example.com"
-                      className="h-11"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>密码</FormLabel>
+                  <FormLabel>管理密码</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="输入密码"
+                      placeholder="输入管理密码"
                       className="h-11"
+                      autoFocus
                       {...field}
                     />
                   </FormControl>
@@ -150,7 +129,6 @@ function LoginFormFallback() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="h-11 rounded-md bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
           <div className="h-11 rounded-md bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
           <div className="h-11 rounded-md bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
         </div>

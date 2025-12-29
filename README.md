@@ -52,6 +52,9 @@ DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
 AUTH_SECRET="your-auth-secret"
 AUTH_TRUST_HOST=true
 
+# 管理员密码
+ADMIN_PASSWORD="your-admin-password"
+
 # Linux DO Credit 支付
 LDC_PID="your_client_id"
 LDC_SECRET="your_client_secret"
@@ -70,7 +73,7 @@ ORDER_EXPIRE_MINUTES=30
 # 推送表结构到数据库
 pnpm db:push
 
-# 初始化管理员账户和示例数据
+# 初始化示例数据（可选）
 pnpm db:seed
 ```
 
@@ -84,11 +87,9 @@ pnpm dev
 - 前台商店: http://localhost:3000
 - 后台管理: http://localhost:3000/admin
 
-### 默认管理员账户
+### 管理员登录
 
-| 邮箱 | 密码 |
-|------|------|
-| admin@example.com | admin123 |
+访问 `/admin` 输入 `ADMIN_PASSWORD` 环境变量中设置的密码即可登录。
 
 ## 🔧 环境变量说明
 
@@ -96,6 +97,7 @@ pnpm dev
 |------|------|------|
 | `DATABASE_URL` | ✅ | PostgreSQL 连接字符串 |
 | `AUTH_SECRET` | ✅ | NextAuth 加密密钥 |
+| `ADMIN_PASSWORD` | ✅ | 管理员登录密码 |
 | `LDC_PID` | ⚠️ | Linux DO Credit Client ID |
 | `LDC_SECRET` | ⚠️ | Linux DO Credit Secret |
 | `LDC_GATEWAY` | ❌ | 支付网关地址（默认官方地址）|
