@@ -57,8 +57,7 @@ LDC_PID="your_client_id"
 LDC_SECRET="your_client_secret"
 LDC_GATEWAY="https://credit.linux.do/epay"
 
-# 网站配置
-NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+# 网站名称（可选）
 NEXT_PUBLIC_SITE_NAME="LDC Store"
 
 # 订单过期时间（分钟）
@@ -100,7 +99,6 @@ pnpm dev
 | `LDC_PID` | ⚠️ | Linux DO Credit Client ID |
 | `LDC_SECRET` | ⚠️ | Linux DO Credit Secret |
 | `LDC_GATEWAY` | ❌ | 支付网关地址（默认官方地址）|
-| `NEXT_PUBLIC_SITE_URL` | ❌ | 网站地址 |
 | `NEXT_PUBLIC_SITE_NAME` | ❌ | 网站名称 |
 | `ORDER_EXPIRE_MINUTES` | ❌ | 订单过期时间（默认30分钟）|
 

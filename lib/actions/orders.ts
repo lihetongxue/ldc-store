@@ -4,9 +4,20 @@ import { db, orders, cards, products } from "@/lib/db";
 import { eq, and, sql, or, desc, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import bcrypt from "bcryptjs";
+import { headers } from "next/headers";
 import { createOrderSchema, type CreateOrderInput } from "@/lib/validations/order";
 import { createPayment } from "@/lib/payment/ldc";
 import { revalidatePath } from "next/cache";
+
+/**
+ * 从请求头自动获取网站 URL
+ */
+async function getSiteUrl(): Promise<string> {
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const protocol = headersList.get("x-forwarded-proto") || "http";
+  return `${protocol}://${host}`;
+}
 
 // 生成订单号: 时间戳 + 随机字符
 function generateOrderNo(): string {
@@ -122,10 +133,12 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
     let paymentUrl: string | undefined;
     if (paymentMethod === "ldc") {
       try {
+        const siteUrl = await getSiteUrl();
         paymentUrl = await createPayment(
           result.order.orderNo,
           result.totalAmount,
-          product.name
+          product.name,
+          siteUrl
         );
       } catch (error) {
         // 支付接口调用失败，但订单已创建

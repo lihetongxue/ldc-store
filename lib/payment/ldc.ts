@@ -102,16 +102,20 @@ export function verifySign(params: NotifyParams, secret: string): boolean {
 /**
  * 创建支付订单
  * 返回支付页面 URL
+ * @param orderId 订单号
+ * @param amount 金额
+ * @param productName 商品名称
+ * @param siteUrl 网站地址（用于回调），自动从请求头获取
  */
 export async function createPayment(
   orderId: string,
   amount: number,
-  productName: string
+  productName: string,
+  siteUrl: string
 ): Promise<string> {
   const gateway = process.env.LDC_GATEWAY || "https://credit.linux.do/epay";
   const pid = process.env.LDC_PID;
   const secret = process.env.LDC_SECRET;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   if (!pid || !secret) {
     throw new Error("支付配置未设置：请在 .env 文件中配置 LDC_PID 和 LDC_SECRET");
